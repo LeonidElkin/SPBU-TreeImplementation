@@ -1,10 +1,16 @@
 package abstractTree
 
-abstract class Tree<T>(private val root: T?) {
+abstract class Tree<T>(private var root: T?) {
 
     private var leftTree: Tree<T>? = null
     private var rightTree: Tree<T>? = null
     private val vRoot = this.root as Vertex<*>
+
+    fun getRoot() = this.root
+
+    fun setRoot(newRoot: T?){
+        this.root = newRoot
+    }
 
     fun getLeftTree() = this.leftTree
 
