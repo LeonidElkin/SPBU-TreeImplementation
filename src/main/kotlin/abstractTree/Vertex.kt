@@ -3,7 +3,7 @@ package abstractTree
 open class Vertex<T>(private val key: Int, private var value: T){
     private var height = 1
 
-    fun getkey() = this.key
+    fun getKey() = this.key
 
     fun getValue() = this.value
 
