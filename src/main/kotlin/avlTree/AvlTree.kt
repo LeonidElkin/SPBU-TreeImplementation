@@ -1,51 +1,28 @@
 package avlTree
 
-import Avl.AvlVertex
-import abstractTree.Tree
+import balancers.AvlBalancer
+import BTree
 
-class AvlTree<T>(root: AvlVertex<T>): Tree<AvlVertex<T>>(root){
-    fun bFactor() = ((this.getRightTree() as AvlTree<T>?)?.getRoot()?.getHeight() ?: 0) - ((this.getLeftTree() as AvlTree<T>?)?.getRoot()?.getHeight() ?: 0)
+class AvlTree<K: Comparable<K>, V>(root: AvlNode<K, V>): BTree<K, V, AvlNode<K, V>>(root){
 
-    fun rotateRight(){
-        val temp = this.getLeftTree() as AvlTree<T>?
-        this.setLeftTree(temp?.getRightTree() as AvlTree<T>?)
-        temp?.setRightTree(this)
-        this.updateHeight()
-        temp?.updateHeight()
-    }
+    private val balancer = AvlBalancer()
 
-    fun rotateLeft(){
-        val temp = this.getRightTree() as AvlTree<T>?
-        temp?.setRightTree(this.getLeftTree() as AvlTree<T>?)
-        this.setLeftTree(temp)
-        temp?.updateHeight()
-        this.updateHeight()
-    }
-
-    fun balance(){
-        this.updateHeight()
-        if (this.bFactor() == 2) {
-            if ((this.getRightTree() as AvlTree<T>?)!!.bFactor() < 0) (this.getRightTree() as AvlTree<T>?)?.rotateRight()
-            this.rotateLeft()
-        }
-        if (this.bFactor() == -2) {
-            if ((this.getLeftTree() as AvlTree<T>?)!!.bFactor() > 0) (this.getLeftTree() as AvlTree<T>?)?.rotateLeft()
-            this.rotateRight()
-        }
-    }
-
-    fun add(vertex: AvlVertex<T>) {
+    override fun add(node: AvlNode<K, V>) {
         if(this.getRoot() == null){
-            setRoot(vertex)
+            setRoot(node)
             return
         }
-        if (this.getRoot()!!.getKey() > vertex.getKey()) {
-            if (this.getLeftTree() == null) this.setLeftTree(AvlTree(vertex))
-            else (this.getLeftTree() as AvlTree<T>).add(vertex)
+        if (this.getRoot()!!.getKey() > node.getKey()) {
+            if (this.getLeftTree() == null) this.setLeftTree(AvlTree(node))
+            else (this.getLeftTree() as AvlTree<K, V>).add(node)
         } else {
-            if (this.getRightTree() == null) this.setRightTree(AvlTree(vertex))
-            else (this.getRightTree() as AvlTree<T>).add(vertex)
+            if (this.getRightTree() == null) this.setRightTree(AvlTree(node))
+            else (this.getRightTree() as AvlTree<K, V>).add(node)
         }
-        this.balance()
+        balancer.balance()
+    }
+
+    override fun delete(key: K) {
+        TODO("Not yet implemented")
     }
 }
